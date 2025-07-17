@@ -54,6 +54,35 @@ def list_tasks():
     for task in tasks:
         print(f"[{task['id']}] ({task['status']}) - {task['description']}")
 
+def update_task(task_id, new_description):
+    if not os.path.exists("tasks.json"):
+        print("❗ No tasks found.")
+        return
+
+    with open("tasks.json", "r") as f:
+        try:
+            tasks = json.load(f)
+        except json.JSONDecodeError:
+            print("❗ Failed to read task list.")
+            return
+
+    # Flag to track if any task was updated
+    updated = False
+
+    for task in tasks:
+        if task["id"] == task_id:
+            task["description"] = new_description
+            task["updatedAt"] = datetime.now().isoformat()
+            updated = True
+            break
+
+    if updated:
+        with open("tasks.json", "w") as f:
+            json.dump(tasks, f, indent=4)
+        print(f"✅ Task {task_id} updated successfully.")
+    else:
+        print(f"❌ Task with ID {task_id} not found.")
+
 
 # 🚀 Entry point of the script
 def main():
@@ -73,6 +102,17 @@ def main():
 
     elif command == "list":
         list_tasks()
+
+    elif command == "update":
+        if len(sys.argv) < 4:
+            print("❗ Usage: python task_cli.py update <task_id> <new_description>")
+        else:
+            try:
+                task_id = int(sys.argv[2])
+                new_description = " ".join(sys.argv[3:])
+                update_task(task_id, new_description)
+            except ValueError:
+                print("❌ Task ID must be an integer.")
 
     else:
         print(f"❌ Unknown command: {command}")
