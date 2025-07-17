@@ -38,21 +38,39 @@ def add_task(description):
 
 
 # 📋 Function to list all tasks
-def list_tasks():
+def list_tasks(status_filter=None):
     if not os.path.exists("tasks.json"):
-        print("No tasks found.")
+        print("❗ No tasks found.")
         return
 
     with open("tasks.json", "r") as f:
-        tasks = json.load(f)
+        try:
+            tasks = json.load(f)
+        except json.JSONDecodeError:
+            print("❗ Could not read tasks file.")
+            return
+
+    if status_filter:
+        status_filter = status_filter.lower()
+        valid_statuses = ["todo", "in-progress", "done"]
+        if status_filter not in valid_statuses:
+            print("❗ Invalid status filter. Use: todo, in-progress, or done.")
+            return
+        tasks = [task for task in tasks if task["status"] == status_filter]
 
     if not tasks:
-        print("No tasks found.")
+        print("📭 No tasks found.")
         return
 
-    # Display each task nicely
     for task in tasks:
-        print(f"[{task['id']}] ({task['status']}) - {task['description']}")
+        status_symbol = {
+            "todo": "📝",
+            "in-progress": "🔄",
+            "done": "✅"
+        }.get(task["status"], "❔")
+
+        print(f"{status_symbol} [{task['id']}] {task['description']} ({task['status']})")
+
 
 def update_task(task_id, new_description):
     if not os.path.exists("tasks.json"):
@@ -181,7 +199,12 @@ def main():
             add_task(description)
 
     elif command == "list":
-        list_tasks()
+        if len(sys.argv) == 3:
+            status_filter = sys.argv[2]
+            list_tasks(status_filter)
+        else:
+            list_tasks()
+    
 
     elif command == "update":
         if len(sys.argv) < 4:
