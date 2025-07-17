@@ -5,12 +5,6 @@ All tasks are stored in a local `tasks.json` file. No external libraries or fram
 
 ---
 
-## 🔗 Project URL
-
-[View on GitHub](https://github.com/azmeerhassan/Task-Tracker)
-
----
-
 ## 🚀 Features
 
 - ✅ Add new tasks
