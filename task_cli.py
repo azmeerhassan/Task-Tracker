@@ -83,6 +83,32 @@ def update_task(task_id, new_description):
     else:
         print(f"❌ Task with ID {task_id} not found.")
 
+def delete_task(task_id):
+    if not os.path.exists("tasks.json"):
+        print("❗ No tasks file found.")
+        return
+
+    with open("tasks.json", "r") as f:
+        try:
+            tasks = json.load(f)
+        except json.JSONDecodeError:
+            print("❗ Could not read tasks file.")
+            return
+
+    # Remove task with matching ID
+    original_length = len(tasks)
+    tasks = [task for task in tasks if task["id"] != task_id]
+
+    if len(tasks) == original_length:
+        print(f"❌ Task with ID {task_id} not found.")
+        return
+
+    # Save updated list
+    with open("tasks.json", "w") as f:
+        json.dump(tasks, f, indent=4)
+
+    print(f"🗑️ Task {task_id} deleted successfully.")
+
 
 # 🚀 Entry point of the script
 def main():
@@ -111,6 +137,15 @@ def main():
                 task_id = int(sys.argv[2])
                 new_description = " ".join(sys.argv[3:])
                 update_task(task_id, new_description)
+            except ValueError:
+                print("❌ Task ID must be an integer.")
+    elif command == "delete":
+        if len(sys.argv) < 3:
+            print("❗ Usage: python task_cli.py delete <task_id>")
+        else:
+            try:
+                task_id = int(sys.argv[2])
+                delete_task(task_id)
             except ValueError:
                 print("❌ Task ID must be an integer.")
 

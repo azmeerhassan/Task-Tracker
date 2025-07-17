@@ -5,12 +5,5 @@
         "status": "todo",
         "createdAt": "2025-07-17T14:22:27.250351",
         "updatedAt": "2025-07-17T18:51:18.318524"
-    },
-    {
-        "id": 2,
-        "description": "Wash Clothes",
-        "status": "todo",
-        "createdAt": "2025-07-17T14:23:22.611772",
-        "updatedAt": "2025-07-17T14:23:22.611772"
     }
 ]
