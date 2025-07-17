@@ -136,6 +136,33 @@ def mark_in_progress(task_id):
     else:
         print(f"❌ Task with ID {task_id} not found.")
 
+def mark_done(task_id):
+    if not os.path.exists("tasks.json"):
+        print("❗ No tasks file found.")
+        return
+
+    with open("tasks.json", "r") as f:
+        try:
+            tasks = json.load(f)
+        except json.JSONDecodeError:
+            print("❗ Could not read tasks file.")
+            return
+
+    updated = False
+    for task in tasks:
+        if task["id"] == task_id:
+            task["status"] = "done"
+            task["updatedAt"] = datetime.now().isoformat()
+            updated = True
+            break
+
+    if updated:
+        with open("tasks.json", "w") as f:
+            json.dump(tasks, f, indent=4)
+        print(f"✅ Task {task_id} marked as 'done'.")
+    else:
+        print(f"❌ Task with ID {task_id} not found.")
+
 
 # 🚀 Entry point of the script
 def main():
@@ -183,6 +210,16 @@ def main():
             try:
                 task_id = int(sys.argv[2])
                 mark_in_progress(task_id)
+            except ValueError:
+                print("❌ Task ID must be an integer.")
+
+    elif command == "mark-done":
+        if len(sys.argv) < 3:
+            print("❗ Usage: python task_cli.py mark-done <task_id>")
+        else:
+            try:
+                task_id = int(sys.argv[2])
+                mark_done(task_id)
             except ValueError:
                 print("❌ Task ID must be an integer.")
 

@@ -12,5 +12,12 @@
         "status": "in-progress",
         "createdAt": "2025-07-17T22:21:50.731545",
         "updatedAt": "2025-07-17T22:22:12.279750"
+    },
+    {
+        "id": 3,
+        "description": "Study Python basics",
+        "status": "done",
+        "createdAt": "2025-07-17T22:28:00.448353",
+        "updatedAt": "2025-07-17T22:28:13.297294"
     }
 ]
